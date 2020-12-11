@@ -1,0 +1,118 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}{% load static %}
+{% block content %}
+<style>
+    .table td.fit, 
+    .table th.fit {
+        white-space: nowrap;
+        width: 1%;
+    }
+    .container {
+        margin-left:10%;
+    }
+    .auto-index {
+        counter-reset: serial-number;
+    }
+
+    .auto-index td:first-child:before {
+        counter-increment: serial-number;
+        content: counter(serial-number);
+    }
+    .table td:first-child {
+        text-align: right;
+    }
+   
+</style>
+<div class="card mt-4 shadow-sm border-info card-size">
+    <div class="card-header border-info">
+        <h5 class="my-0 font-weight-normal">Skin Analysis Report</h5>
+    </div>
+    <div class="card-body border-info">
+        <table class="table table-bordered auto-index">
+        <thead class="table-primary">
+        <tr>
+            <th class="fit">S.No</th>
+            <th>Category Name</th>
+            <th>Status</th>
+            <th>Marks</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if oil_dry_ctx %}
+        <tr>
+            <td class="fit"></td>
+            <td>Strip Analysis</td>
+            <td>{{ oil_dry_ctx.strip_analysis }}</td>
+            <td class="text-center">{{ oil_dry_ctx.strip_score }}</td>
+        </tr>
+        <tr>
+            <td class="fit"></td>
+            <td>Oil Dry Quiz Score</td>
+            <td>{{ oil_dry_ctx.quiz_analysis }}</td>
+            <td class="text-center">{{ oil_dry_ctx.quiz_score }}</td>
+        </tr>
+         <tr>
+            <td class="fit"></td>
+            <td colspan="3" class="font-weight-bold">
+                Oil Dry Final analysis (Strip+Quiz) <span class="font-weight-normal">&nbsp;&nbsp; = {{ oil_dry_ctx.oil_dry_analysis }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="fit"></td>
+            <td colspan="3" class="">
+                <span><b>Hydration Level</b>&nbsp;&nbsp;=&nbsp;&nbsp;{{ oil_dry_ctx.hydration }}</span>
+                <span style="padding-left: 30%"><b>pH</b>&nbsp;&nbsp;=&nbsp;&nbsp;{{ ph_anls_ctx.choice }}</span>
+            </td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td class="fit"></td>
+            <td>Sen-Res Score</td>
+            <td>{{ sen_res_ctx.sen_res_analysis }}</td>
+            <td class="text-center">{{ sen_res_ctx.sen_res_score }}</td>
+        </tr>
+        
+        {% if concerns %}
+        <tr>
+            <td class="fit"></td>
+            <td>Concerns</td>
+            <td>Concerns: {{ concerns.category.all|join:", " }}</td>
+            <td class="text-center">Primary: {{ concerns.is_primary }}</td>
+        </tr>
+        {% endif %}
+        
+        {% if acne_anls_ctx.acne_analysis %}
+        <tr>
+            <td class="fit"></td>
+            <td>Acne Score</td>
+            <td>{{ acne_anls_ctx.acne_analysis }}</td>
+            <td class="text-center">{{ acne_anls_ctx.acne_score }}</td>
+        </tr>
+        {% endif %}
+        {% if pigmentation_anls_ctx.pigmentation_analysis %}
+        <tr>
+            <td class="fit"></td>
+            <td>Pigmentation Score</td>
+            <td>{{ pigmentation_anls_ctx.pigmentation_analysis }}</td>
+            <td class="text-center">{{ pigmentation_anls_ctx.pigmentation_score }}</td>
+        </tr>
+        {% endif %}
+        {% if wrinkletight_anls_ctx.wrinkletight_analysis %}
+        <tr>
+            <td class="fit"></td>
+            <td>Wrinkletight Score</td>
+            <td>{{ wrinkletight_anls_ctx.wrinkletight_analysis }}</td>
+            <td class="text-center">{{ wrinkletight_anls_ctx.wrinkletight_score }}</td>
+        </tr>
+        {% endif %}
+        {% if pro_obj %}
+        <tr>
+            <td class="fit"></td>
+            <td>Recommended Products</td>
+            <td class="" colspan="2">({{ pro_obj.code }})&nbsp;{{ pro_obj.cleanser }}, {{ pro_obj.moisturizer }}, {{ pro_obj.serum }}</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}

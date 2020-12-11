@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h5 class="modal-title">Customer Info</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body pt-0">
+    <table class="table table-bordered mt-1">
+        <tr>
+            <th colspan="2" style="background-color: #0c499c;color: white">Customer Info</th>
+        </tr>
+        <tr>
+            <th>Employee ID</th>
+            <td>{{ user_info.employee_id }}</td>
+        </tr>
+        <tr>
+            <th>Employee Name</th>
+            <td>{{ user_info.name }}</td>
+        </tr>
+        <tr>
+            <th>Gender</th>
+            <td>{{ user_info.get_gender_display }}</td>
+        </tr>
+        <tr>
+            <th>Age</th>
+            <td>{{ user_info.get_age_display }}</td>
+        </tr>
+        <tr>
+            <th>Location</th>
+            <td>{{ user_info.location }}</td>
+        </tr>
+        <tr>
+            <th colspan="2" style="text-align:right">
+                <p class="mb-0">Your data is already with us, still you want to continue
+                    <span><a class="" href="{% url 'quizapp:skin_quiz' %}">
+                                    <br>Please proceed...&raquo;</a></span>
+                </p>
+            </th>
+        </tr>
+    </table>
+</div>
+

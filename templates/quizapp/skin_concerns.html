@@ -1,0 +1,144 @@
+{% extends 'base.html' %}{% load static %}
+{% block content %}
+    <style>
+        .big-checkbox {
+            width: 30px;
+            height: 25px;
+        }
+
+        .modal-body {
+            background-color: #C0C0C0;
+        }
+
+        .card-size {
+            min-width: 18rem;
+        }
+
+        .modal-card-size {
+            min-width: 8rem;
+        }
+    </style>
+
+    <div class="card mt-4 shadow-sm border-info card-size">
+        <div class="card-body border-info">
+            <div class="pricing-header px-3 py-3 pt-md-3 pb-md-0 mx-auto text-center">
+                <h1 class="display-4">{{ pc_data.name }}</h1>
+                <p class="lead">
+                    Please Select your skin concerns (Min: 1 & Max: 3)
+                </p>
+            </div>
+            <hr class="border-info mb-0">
+            <div class="card-deck mb-4 text-center">
+            {% for x in category %}
+                <div class="card mt-4 shadow-sm border-info card-size" id="cat-card">
+                    <div class="card-header border-info">
+                        <h5 class="my-0 font-weight-normal">{{ x.name }}</h5>
+                    </div>
+                    <div class="card-body border-info">
+                        <p>information</p>
+                    </div>
+                    <div class="card-footer text-muted border-info">
+                        <input type="checkbox" value="{{ x.id }}" class="big-checkbox primary-checkbox" name="primary" data-name="{{ x.name }}">
+                        <input type="checkbox" value="{{ x.id }}" class="concerns-checkbox" name="checkbox" hidden>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <a class="btn btn-outline-info" href="{% url 'quizapp:index' %}">Back</a>
+        <a class="btn orb-btn float-right invisible concerns" id="concernsBtn">Concerns&raquo;</a>
+    </div>
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="modal-quiz"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form method="get" action="{% url 'quizapp:skin_quiz' %}" name="concern_form">
+                <input name="user_name" type="text" hidden>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Please select skin concern you would like to address first.</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card-deck mb-4 text-center" id="card-load"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Process</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    
+    {% block extraJS %}
+    
+    <script type="application/javascript">
+        let user_name = sessionStorage.getItem("user_name");
+        document.concern_form.user_name.value = user_name;
+        let skin_type = "{{ oil_dry_ctx.oil_dry_analysis }}";
+
+        let checkbox = document.querySelector('.card-deck');
+        //let values = [];
+        let s = new Set();
+        let dry_array = ['Combination Skin (Slightly Oily)', 'Oily Skin']
+        let oily_array = ['Dry Skin', 'Normal Skin']
+        //https://stackoverflow.com/questions/37073774/using-lodash-push-to-an-array-only-if-value-doesnt-exist
+        checkbox.onchange = (e) => {
+            let elm = e.target;
+            let elm_name = elm.dataset.name;
+            let concernsBtn = document.getElementById('concernsBtn');
+
+            if(e.target.checked){                
+                if(elm_name === 'Dry Skin' && dry_array.includes(skin_type)){
+                    alert('invalid selection');
+                    elm.checked = false;
+                } else if (elm_name === 'Oily Skin' && oily_array.includes(skin_type)){
+                    alert('invalid selection');
+                    elm.checked = false;
+                } else {
+                    s.add(elm.value)
+                }
+                
+                if (s.has(String(5)) && s.has(String(10))) {
+                    s.delete(elm.value);
+                    elm.checked = false;
+                    alert('skin concerns error: both oily and dry skin is not possible');
+                } else if (s.size > 3) {
+                    s.delete(elm.value);
+                    elm.checked = false;
+                    alert('you can select min: 1 and max: 3');
+                } else if (s.size >= 1) {
+                    concernsBtn.classList.remove('invisible');
+                }
+            } else {
+                s.delete(elm.value);
+            }
+            //values = Array.from(s);
+        }
+        
+        
+        $(document).ready(function () {
+            $(".concerns").click(function () {
+                //https://jsfiddle.net/4bnx8acw/15/
+                //let elm_test = document.querySelectorAll('input[type="checkbox"]:checked').copy
+                let option_elm = document.querySelectorAll('input[type="checkbox"]:checked');
+                let elm_clone = $(option_elm).parent().closest("#cat-card");
+                $("#modal-quiz").modal('show');
+                $("#card-load").html(elm_clone.clone());
+                $("#card-load .card").removeClass('card-size').addClass('modal-card-size');
+                $('#card-load .primary-checkbox').attr('type', 'radio');
+                $('#card-load .concerns-checkbox').prop('checked', true);
+            });
+
+            $('#modal-quiz').on('hidden.bs.modal', function () {
+                $("#card-load").empty();
+            });
+
+        });
+
+    </script>
+    {% endblock %}

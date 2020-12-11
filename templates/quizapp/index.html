@@ -1,0 +1,91 @@
+{% extends 'base.html' %}{% load crispy_forms_tags %}{% load static %}
+
+{% block content %}
+<style>
+    /* https://www.w3schools.com/cssref/tryit.asp?filename=trycss3_background_hero */
+    html, body  { 
+        background: url("/static/images/127.jpg") no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+</style>
+    <h1 class="display-1 mt-3 text-center">Personal Care</h1>
+     <div>
+        <h2 class="display-4 text-center">Skin Analysis</h2>
+        <p></p>
+        <div class="text-center"> 
+           <a class="btn orb-btn show-form" data-url="{% url 'quizapp:create_customer' %}"
+            data-toggle="modal" data-target="#modal-quiz">Take Quiz&nbsp;&raquo;
+            </a> 
+        </div> 
+    </div>
+
+    <div id="loader"></div>
+    <div class="modal fade" id="modal-quiz">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" data-url="{% url 'quizapp:create_customer' %}" class="create-form">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create Profile</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-6">
+                            {{ form|crispy }}
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary save-form">Process</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{% static 'assets/dist/js/jquery.js' %}"></script>
+
+    <script type="application/javascript">
+        $(document).ready(function () {
+            //let user_name = sessionStorage.getItem("name");
+            let user_name = 'user_name';
+            if (user_name in sessionStorage) {
+                sessionStorage.removeItem(user_name);
+            }
+
+
+            var SaveForm = function (e) {
+                e.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    url: form.attr('data-url'),
+                    data: form.serialize(),
+                    type: form.attr('method'),
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#modal-quiz .modal-content').html(data.html_data);
+                        if (data.exists) {
+                            sessionStorage.setItem("user_name", data.exists);
+                        }
+                        if (data.user_info) {
+                            sessionStorage.setItem("user_name", data.user_info);
+                            location.href = "{% url 'quizapp:skin_quiz' %}";
+                        }
+                    }
+                })
+            };
+
+            // create
+            //$(".show-form").click(ShowForm);
+            $("#modal-quiz").on("submit", ".create-form", SaveForm);
+
+        });
+    </script>
+{% endblock %}

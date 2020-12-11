@@ -1,0 +1,66 @@
+<!doctype html>{% load static %}
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.1.1">
+    <title>Sticky Footer Navbar Template · Bootstrap</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href={% static 'favicon.ico' %}>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" 
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'  type='text/css' media="screen">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link href="{% static 'sticky-footer-navbar.css' %}" rel="stylesheet">
+</head>
+<body class="d-flex flex-column h-100">
+<!-- Fixed navbar -->
+<header> {% include "navbar.html" %} </header>
+  
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+
+<footer class="footer mt-auto">
+  <div class="container text-center">
+      <img src="{% static 'images/revitos.png' %}" alt="revitos" width="50" height="50" class="">
+      <span class="text-muted font-weight-bold">Revitos Specialities Pvt Ltd., Hyderabad.</span>
+  </div>
+</footer>
+
+</body>
+
+<script type="text/javascript" src="{% static 'assets/dist/js/jquery.js' %}"></script>
+<script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  -->
+
+{% block extraJS %}{% endblock %}
+
+</html>
